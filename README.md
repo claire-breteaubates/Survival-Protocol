@@ -4,6 +4,16 @@ A 2D top-down survival shooter developed in **C++20** using **SFML 3**.
 
 The player must survive increasingly difficult waves of enemies, using movement and shooting to avoid damage and defeat opponents.
 
+## Gameplay
+
+## In-game
+
+![Survival Protocol gameplay - Wave 7](docs/gameplay.png)
+
+## Game Over
+
+![Survival Protocol game over screen](docs/game-over.png)
+
 ## Features
 
 - **Wave-based enemy spawning** with increasing difficulty
