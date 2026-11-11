@@ -43,8 +43,8 @@ target_link_libraries(SurvivalProtocol
 add_custom_command(
     TARGET SurvivalProtocol POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/SFML_Week5/Assets"
-        "$<TARGET_FILE_DIR:SurvivalProtocol>/Assets"
+        "${CMAKE_CURRENT_SOURCE_DIR}/SFML_Week5/assets"
+        "$<TARGET_FILE_DIR:SurvivalProtocol>/assets"
     COMMENT "Copying game assets"
 )
 
