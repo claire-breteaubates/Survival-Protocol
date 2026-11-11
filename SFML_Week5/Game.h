@@ -81,10 +81,6 @@ private:
 	float shootInterval = 0.25f;
 	float muzzleOffset = 35.f;
 
-	//Damage Cooldown
-	float playerDamageCooldown = 0.f;
-	float playerDamageInterval = 0.5f;
-
 	// Text
 	sf::Font font;
 	std::optional<sf::Text> gameOverText;

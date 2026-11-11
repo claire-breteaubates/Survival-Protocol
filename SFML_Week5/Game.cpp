@@ -111,8 +111,6 @@ void Game::Update(float dt)
 
 	shootCooldown -= dt;
 
-	playerDamageCooldown = std::max(0.f, playerDamageCooldown - dt);
-
 	player.Update(dt, window);
 
 	UpdateEnemies(dt);
@@ -280,13 +278,9 @@ void Game::CheckEnemyPlayerCollision()
 		if (!enemy.IsAlive())
 			continue;
 
-		if (playerDamageCooldown > 0.f)
-			return;
-
 		if (enemy.GetBounds().findIntersection(playerBounds))
 		{
 			player.TakeDamage(enemy.GetDamage());
-			playerDamageCooldown = playerDamageInterval;
 			break;
 		}
 	}
@@ -368,7 +362,6 @@ void Game::RestartGame()
 	projectiles.clear();
 
 	shootCooldown = 0.f;
-	playerDamageCooldown = 0.f;
 	gameState = GameState::Playing;
 
 	score = 0;

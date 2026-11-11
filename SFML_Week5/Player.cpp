@@ -123,17 +123,26 @@ void Player::Reset()
 
 void Player::HandleMovement(float dt)
 {
+	sf::Vector2f direction{ 0.f, 0.f };
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		sprite.move({speed * dt, 0.f});
+		direction.x += 1.f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-		sprite.move({ -speed * dt, 0.f });
+		direction.x -= 1.f;
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-		sprite.move({ 0.f, -speed * dt });
+		direction.y -= 1.f;
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		sprite.move({ 0.f, speed * dt });
+		direction.y += 1.f;
+
+	// Avoid normalising a zero-length vector
+	if (direction.lengthSquared() > 0.f)
+	{
+		direction = direction.normalized();
+		sprite.move(direction * speed * dt);
+	}
 }
 
 void Player::ClampToScreen(const sf::RenderWindow& window)
@@ -171,6 +180,10 @@ void Player::RotateToMouse(const sf::RenderWindow& window)
 		mouseWorld.y - sprite.getPosition().y
 	};
 	
+
+	if (toMouse.lengthSquared() < 0.0001f)
+		return;
+
 	const float angleRadians = std::atan2(toMouse.y, toMouse.x);
 
 	sprite.setRotation(sf::radians(angleRadians) + sf::degrees(90.f));
