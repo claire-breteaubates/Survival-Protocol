@@ -150,7 +150,8 @@ void Player::ClampToScreen(const sf::RenderWindow& window)
 	sf::Vector2f pos = sprite.getPosition();
 
 	const sf::FloatRect bounds = sprite.getGlobalBounds();
-	const sf::Vector2u windowSize = window.getSize();
+
+	const sf::Vector2f worldSize = window.getView().getSize();
 
 	const float halfWidth = bounds.size.x / 2.f;
 	const float halfHeight = bounds.size.y / 2.f;
@@ -158,13 +159,13 @@ void Player::ClampToScreen(const sf::RenderWindow& window)
 	pos.x = std::clamp(
 		pos.x,
 		halfWidth,
-		static_cast<float>(windowSize.x) - halfWidth
+		worldSize.x - halfWidth
 	);
 
 	pos.y = std::clamp(
 		pos.y,
 		halfHeight,
-		static_cast<float>(windowSize.y) - halfHeight
+		worldSize.y - halfHeight
 	);
 
 	sprite.setPosition(pos);

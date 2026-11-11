@@ -46,8 +46,8 @@ Game::Game()
 		bounds.position.y + bounds.size.y / 2.f
 	});
 	gameOverText->setPosition({
-		window.getSize().x / 2.f,
-		window.getSize().y / 2.f
+		400.f,
+		300.f
 	});
 
 	healthBarBackground.setSize({
@@ -71,8 +71,55 @@ Game::Game()
 	PrepareNextWave();
 }
 
+void Game::UpdateView()
+{
+	constexpr float gameWidth = 800.f;
+	constexpr float gameHeight = 600.f;
+
+	const sf::Vector2u windowSize = window.getSize();
+
+	if (windowSize.x == 0 || windowSize.y == 0)
+		return;
+
+	float windowRatio =
+		static_cast<float>(windowSize.x) / windowSize.y;
+
+	float gameRatio = gameWidth / gameHeight;
+
+	sf::View view(sf::FloatRect(
+		{ 0.f, 0.f },
+		{ gameWidth, gameHeight }
+	));
+
+	if (windowRatio > gameRatio)
+	{
+		// Window is wider than the game
+		float width = gameRatio / windowRatio;
+
+		view.setViewport(sf::FloatRect(
+			{ (1.f - width) / 2.f, 0.f },
+			{ width, 1.f }
+		));
+	}
+	else
+	{
+		// Window is taller than the game
+		float height = windowRatio / gameRatio;
+
+		view.setViewport(sf::FloatRect(
+			{ 0.f, (1.f - height) / 2.f },
+			{ 1.f, height }
+		));
+	}
+
+	window.setView(view);
+}
+
 void Game::Run()
 {
+
+	UpdateView();
+
 	while (window.isOpen())
 	{
 		float dt = std::min(clock.restart().asSeconds(), 0.05f);
@@ -83,6 +130,8 @@ void Game::Run()
 	}
 }
 
+
+
 void Game::ProcessEvents()
 {
 	while (std::optional<sf::Event> event = window.pollEvent())
@@ -90,6 +139,11 @@ void Game::ProcessEvents()
 		if (event->is<sf::Event::Closed>())
 		{
 			window.close();
+		}
+
+		if (event->is<sf::Event::Resized>())
+		{
+			UpdateView();
 		}
 
 		if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
@@ -304,7 +358,7 @@ void Game::DeactivateOffscreenProjectiles()
 {
 	const sf::FloatRect worldBounds(
 		{ 0.f, 0.f },
-		sf::Vector2f(window.getSize())
+		{800.f, 600.f}
 	);
 
 	for (auto& projectile : projectiles)

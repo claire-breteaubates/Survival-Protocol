@@ -24,6 +24,7 @@ public:
 private:
 	void ProcessEvents();
 	void Update(float dt);
+	void UpdateView();
 	void Render();
 
 	// Enemies
