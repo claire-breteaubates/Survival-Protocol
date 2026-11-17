@@ -1,5 +1,4 @@
 #include "WaveManager.h"
-#include <algorithm>
 #include <cassert>
 
 
