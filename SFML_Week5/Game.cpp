@@ -172,7 +172,6 @@ void Game::Update(float dt)
 
 	DeactivateOffscreenProjectiles();
 	CheckProjectileEnemyCollision();
-
 	CheckEnemyPlayerCollision();
 
 	RemoveInactiveProjectiles();
@@ -186,23 +185,7 @@ void Game::Update(float dt)
 		return;
 	}
 
-	waveManager.UpdateWave(dt, enemies.size());
-
-	if (waveManager.IsNextWaveReady())
-	{
-		PrepareNextWave();
-	}
-
-	if (waveManager.HasPendingSpawn())
-	{
-		std::optional<EnemyType> nextEnemy = waveManager.GetNextSpawnType();
-		
-		if (nextEnemy)
-		{
-			enemies.push_back(CreateEnemy(*nextEnemy));
-			waveManager.ConfirmEnemySpawned();
-		}
-	}
+	UpdateWaves(dt);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) &&
 		shootCooldown <= 0)
@@ -243,8 +226,8 @@ Enemy Game::CreateEnemy(EnemyType type)
 		}
 	}
 
-	// Fallback: find the furthest corner of the spawn area
-	// so we still respect the minimum distance
+	// Fallback: find the furthest corner
+	// if random attempts fail.
 
 	const sf::Vector2f corners[] = {
 		{ 50.f, 50.f },
@@ -297,12 +280,14 @@ void Game::CheckProjectileEnemyCollision()
 		if (!projectile.IsActive())
 			continue;
 
+		const auto projectileBounds = projectile.GetBounds();
+
 		for (auto& enemy : enemies)
 		{
 			if (!enemy.IsAlive())
 				continue;
 
-			if (projectile.GetBounds().findIntersection(enemy.GetBounds()))
+			if (projectileBounds.findIntersection(enemy.GetBounds()))
 			{
 				const bool wasAlive = enemy.IsAlive();
 
@@ -407,6 +392,27 @@ void Game::PrepareNextWave()
 	enemies.reserve(waveManager.GetTotalEnemies());
 }
 
+void Game::UpdateWaves(float dt)
+{
+	waveManager.UpdateWave(dt, enemies.size());
+
+	if (waveManager.IsNextWaveReady())
+	{
+		PrepareNextWave();
+	}
+
+	if (waveManager.HasPendingSpawn())
+	{
+		std::optional<EnemyType> nextEnemy =
+			waveManager.GetNextSpawnType();
+
+		if (nextEnemy)
+		{
+			enemies.push_back(CreateEnemy(*nextEnemy));
+			waveManager.ConfirmEnemySpawned();
+		}
+	}
+}
 void Game::RestartGame()
 {
 	player.Reset();

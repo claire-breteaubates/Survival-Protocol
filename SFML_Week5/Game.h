@@ -31,6 +31,7 @@ private:
 	Enemy CreateEnemy(EnemyType type);
 	void UpdateEnemies(float dt);
 	void PrepareNextWave();
+	void UpdateWaves(float dt);
 
 	// Projectiles
 	void UpdateProjectiles(float dt);
