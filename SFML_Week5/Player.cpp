@@ -61,13 +61,13 @@ void Player::TakeDamage(int amount)
 	}
 }
 
-void Player::StartInvulnerability(float invulnerableDuration)
+void Player::StartInvulnerability(float duration)
 {
-	if (invulnerabilityDuration <= 0.f)
+	if (duration <= 0.f)
 		return;
 	
 	invulnerable = true;
-	invulnerabilityTimer = invulnerableDuration;
+	invulnerabilityTimer = duration;
 }
 
 sf::Vector2f Player::GetPosition() const

@@ -11,7 +11,7 @@ public:
 	void Draw(sf::RenderWindow& window) const;
 
 	void TakeDamage(int amount);
-	void StartInvulnerability(float invulnerableDuration);
+	void StartInvulnerability(float duration);
 
 	sf::Vector2f GetPosition() const;
 	sf::Vector2f GetForwardDirection() const;
