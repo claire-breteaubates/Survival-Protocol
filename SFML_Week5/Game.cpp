@@ -22,7 +22,7 @@ Game::Game()
 
 	if (!font.openFromFile("assets/fonts/DejaVuSans.ttf"))
 	{
-		throw std::runtime_error("Failed to load font!.");
+		throw std::runtime_error("Failed to load font.");
 	}
 
 	scoreText.emplace(font, "");
@@ -67,6 +67,8 @@ Game::Game()
 	healthBarFill.setFillColor(sf::Color::Green);
 
 	UpdateHUD();
+
+	projectiles.reserve(64);
 	
 	PrepareNextWave();
 }
@@ -259,9 +261,11 @@ Enemy Game::CreateEnemy(EnemyType type)
 
 void Game::UpdateEnemies(float dt)
 {
+	const sf::Vector2f playerPosition = player.GetPosition();
+
 	for (auto& enemy : enemies)
 	{
-		enemy.Update(dt, player.GetPosition());
+		enemy.Update(dt, playerPosition);
 	}
 }
 
