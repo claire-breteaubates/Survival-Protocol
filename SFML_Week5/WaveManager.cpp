@@ -1,5 +1,6 @@
 #include "WaveManager.h"
 #include <algorithm>
+#include <cassert>
 
 
 WaveManager::WaveManager()
@@ -52,25 +53,29 @@ void WaveManager::UpdateWave(float dt, std::size_t enemiesRemaining)
 
 WaveConfig WaveManager::GetWaveConfig() const
 {
-	int nextWave = currentWave + 1;
+	constexpr int startingEnemies = 2;
+	constexpr int fastStartWave = 3;
+	constexpr int tankStartWave = 6;
+	constexpr int fastIncreaseInterval = 3;
+	constexpr int tankIncreaseInterval = 3;
 
-	// Total enemies increase by 1 each wave
-	int totalEnemies = nextWave + 2;
+	const int nextWave = currentWave + 1;
+	const int totalEnemies = nextWave + startingEnemies;
 
-	// Introduce fast enemies on wave 3.
-	// Add another fast enemy every 3 waves.
-	int fastCount = (nextWave >= 3) 
-		? 1 +  (nextWave - 3) / 3
+	const int fastCount = (nextWave >= fastStartWave) 
+		? 1 +  (nextWave - fastStartWave) / fastIncreaseInterval
 		: 0;
 
-	// Introduce tank on wave 5.
-	// Add another tank every 3 waves.
-	int tankCount = (nextWave >= 6)
-		? 1 + (nextWave - 6) / 3
+	const int tankCount = (nextWave >= tankStartWave)
+		? 1 + (nextWave - tankStartWave) / tankIncreaseInterval
 		: 0;
 
 	// Fill the remaining slots with normal enemies.
-	int normalCount = totalEnemies - fastCount - tankCount;
+	const int normalCount = totalEnemies - fastCount - tankCount;
+
+	assert(normalCount >= 0 &&
+		"Wave configuration has too many special enemies");
+
 	return { {
 		{ EnemyType::Normal, normalCount },
 		{ EnemyType::Fast, fastCount },
